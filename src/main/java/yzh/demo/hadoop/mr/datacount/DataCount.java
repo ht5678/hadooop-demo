@@ -52,13 +52,13 @@ public class DataCount {
 		
 		job.setJarByClass(DataCount.class);
 		
-		//mapper
+		//mapper,如果是在一个文件中，mapper必须是static的，否则报错
 		job.setMapperClass(DCMapper.class);
 //		job.setMapOutputKeyClass(Text.class);
 //		job.setMapOutputValueClass(LongWritable.class);
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
 		
-		//reducer
+		//reducer,如果是在一个文件中，reducer必须是static的，否则报错
 		job.setReducerClass(DCReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(DataBean.class);
