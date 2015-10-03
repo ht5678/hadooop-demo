@@ -17,6 +17,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  * 运行的时候需要制定main类
  *  hadoop jar  dc_sort.jar  yzh.demo.hadoop.mr.sort.SortStep /dc_p4/part-r-00001 /dc_sort
  * 
+ * hdfs:根目录路径
+ * hdfs://hadoop115:9000/
  * 
  * @author sdwhy
  *
@@ -34,7 +36,10 @@ public class SortStep {
 		job.setMapOutputKeyClass(InfoBean.class);
 		job.setMapOutputValueClass(NullWritable.class);
 		
+		
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
+		//2.在linux操作系统下进行操作可以进行断点
+//		FileInputFormat.setInputPaths(job, new Path("hdfs://192.168.10.115:9000/dc_p4/part-r-00001"));
 		
 		
 		//reducer
@@ -43,6 +48,11 @@ public class SortStep {
 		job.setOutputValueClass(InfoBean.class);
 		
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		//2.在linux操作系统下进行操作可以进行断点
+//		FileOutputFormat.setOutputPath(job, new Path("hdfs://192.168.10.115:9000/dc_sort"));
+		
+		//设置combiner,可以用于在node节点的相加，过滤等不影响reducer结果的操作，在node进行部分cobiner操作可以增加效率
+//		job.setCombinerClass(SortReducer.class);
 		
 		job.waitForCompletion(true);
 		
