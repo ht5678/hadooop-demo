@@ -114,5 +114,12 @@
          <artifactId>hive-exec</artifactId>  
          <version>0.13.0</version>  
      </dependency>
+     
+     <dependency>  
+	     <groupId>org.apache.hive.hcatalog</groupId>  
+	     <artifactId>hive-hcatalog-core</artifactId>  
+	    <version>0.13.0</version>  
+	</dependency>
+	 
   </dependencies>
 </project>
