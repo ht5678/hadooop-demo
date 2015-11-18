@@ -23,13 +23,36 @@ public class RCFileDemo {
 	public static void main(String[] args) throws IOException {
 		conf = new Configuration();
 //		Path src = new Path("/user/hive/warehouse/demo/000000_0");
-		Path src = new Path("/lenovo/000000_0");
+//		Path src = new Path("/lenovo/*");
+//		Path src = new Path(args[0]);
+		//0-9
+		for(int  i = 0 ; i <= 9 ; i++){
+			Path src = new Path("/lenovo/00000"+i+"_0");
+			readRcFile(src, conf);
+		}
+		//10-99
+		for(int  i = 10 ; i <= 99 ; i++){
+			Path src = new Path("/lenovo/0000"+i+"_0");
+			readRcFile(src, conf);
+		}
+		//100-239
+		for(int  i = 100 ; i <= 239 ; i++){
+			Path src = new Path("/lenovo/000"+i+"_0");
+			readRcFile(src, conf);
+		}
+		//2100-2399
+		for(int  i = 2100 ; i <= 2399 ; i++){
+			Path src = new Path("/lenovo/00"+i+"_0");
+			readRcFile(src, conf);
+		}
 //		createRcFile(src, conf);
-		readRcFile(src, conf);
+		
 	}
 
 	private static Configuration conf;
 	private static final String TAB = "\t";
+	private static final String ENTER = "\n";
+	private static int i = 0;
 
 	private static String strings[] = { "1,true,123.123,2012-10-24 08:55:00",
 			"2,false,1243.5,2012-10-25 13:40:00",
@@ -102,14 +125,14 @@ public class RCFileDemo {
 				sb.append(Bytes.toString(brw.getData(), brw.getStart(),
 						brw.getLength()));
 				if (i < cols.size() - 1) {
-					sb.append(TAB);
+					sb.append(ENTER);
 				}
 			}
 			System.out.println(sb.toString());
 		}
 	}
 
-	protected static void readerByCol(RCFile.Reader reader) throws IOException {
+	protected static synchronized void readerByCol(RCFile.Reader reader) throws IOException {
 		// 一个行组的数据
 		BytesRefArrayWritable cols = new BytesRefArrayWritable();
 		while (reader.nextBlock()) {
@@ -120,13 +143,23 @@ public class RCFileDemo {
 				for (int i = 0; i < cols.size(); i++) {
 					brw = cols.get(i);
 					// 根据start 和 length 获取指定行-列数据
-					sb.append(Bytes.toString(brw.getData(), brw.getStart(),
-							brw.getLength()));
+					String phoneStr = Bytes.toString(brw.getData(), brw.getStart(),
+							brw.getLength());
+					if(!phoneStr.matches("(((\\+86)|(86))?(1)\\d{10})")){
+						continue;
+					}
+					sb.append(phoneStr);
 					if (i < cols.size() - 1) {
-						sb.append(TAB);
+						sb.append(ENTER);
+					}
+					if(i==10){
+						break;
 					}
 				}
+//				System.out.println("=============================start--- ("+i+")======================================");
 				System.out.println(sb.toString());
+//				System.out.println("==============================end--- ("+i+")======================================");
+				i++;
 			}
 		}
 	}

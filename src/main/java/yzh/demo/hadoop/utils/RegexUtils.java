@@ -13,6 +13,23 @@ import org.apache.commons.lang.StringUtils;
  * @author yuezhihua 2015年1月30日 上午10:48:42
  */
 public abstract class RegexUtils {
+	
+	
+	/**
+     * 匹配字符串
+     * @param original
+     * @param pattern
+     * @return
+     */
+    public static List<String> matchFirstGroupPattern(String original , String regex){
+    	Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(original);
+		List<String> retVal = new ArrayList<>();
+		while(matcher.find()){
+			retVal.add(matcher.group(0));
+		}
+		return retVal;
+    }
     
     
     /**
